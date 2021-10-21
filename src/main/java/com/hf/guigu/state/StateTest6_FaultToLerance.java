@@ -2,13 +2,16 @@ package com.hf.guigu.state;
 
 import com.hf.guigu.beans.SensorReading;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.runtime.state.filesystem.FsStateBackend;
 import org.apache.flink.runtime.state.hashmap.HashMapStateBackend;
 import org.apache.flink.runtime.state.memory.MemoryStateBackend;
 import org.apache.flink.runtime.state.storage.JobManagerCheckpointStorage;
+import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
+import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.EventTimeSessionWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -20,7 +23,6 @@ public class StateTest6_FaultToLerance {
         env.setParallelism(1);
 
         //状态后端配置
-
         // 1 MemoryStateBackend
         //env.setStateBackend(new MemoryStateBackend()); //已过时
         env.setStateBackend(new HashMapStateBackend());
@@ -32,6 +34,25 @@ public class StateTest6_FaultToLerance {
 
         // 3 RocksDBStateBackend
         //env.setStateBackend(new RocksDBStateBackend() );
+
+        //检查点配置
+        env.enableCheckpointing(300);
+        //检查点高级配置
+        env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+        env.getCheckpointConfig().setCheckpointTimeout(60000L);
+        env.getCheckpointConfig().setMaxConcurrentCheckpoints(2);
+        env.getCheckpointConfig().setMinPauseBetweenCheckpoints(100L);
+        env.getCheckpointConfig().setPreferCheckpointForRecovery(false);//默认为false
+        env.getCheckpointConfig().setTolerableCheckpointFailureNumber(0);//默认为0
+
+        //重启策略
+        //固定延迟重启
+        env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3,10000L));
+        //失败率重启
+        env.setRestartStrategy(RestartStrategies.failureRateRestart(3
+                , org.apache.flink.api.common.time.Time.minutes(10)
+                , org.apache.flink.api.common.time.Time.minutes(2)));
+
 
 
 
