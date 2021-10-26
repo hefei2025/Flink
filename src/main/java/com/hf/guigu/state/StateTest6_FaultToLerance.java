@@ -54,8 +54,6 @@ public class StateTest6_FaultToLerance {
                 , org.apache.flink.api.common.time.Time.minutes(2)));
 
 
-
-
         //从文件中读取数据
         DataStream<String> inputStrem = env.readTextFile("C:\\GitHub\\2021\\Flink\\src\\main\\resources\\sensor.txt");
 

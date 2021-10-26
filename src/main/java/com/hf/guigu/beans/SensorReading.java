@@ -5,11 +5,12 @@ package com.hf.guigu.beans;
  */
 public class SensorReading {
     //属性：id，时间戳，温度值
-    private String id;
-    private Long timestamp;
-    private Double temperature;
+    public String id;
+    public Long timestamp;
+    public Double temperature;
 
     public SensorReading() {
+        super();
     }
 
     public SensorReading(String id, Long timestamp, Double temperature) {

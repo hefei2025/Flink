@@ -1,3 +1,4 @@
+/*
 package com.hf.test.flinkSql;
 
 
@@ -71,9 +72,11 @@ public class FlinkSqlTest {
 
     public static class PlayerData {
 
-        /**
+        */
+/**
          * 赛季，球员，出场，首发，时间，助攻，抢断，盖帽，得分
-         */
+         *//*
+
         public String season;
         public String player;
         public String play_num;
@@ -130,3 +133,4 @@ public class FlinkSqlTest {
         }
     }
 }
+*/
